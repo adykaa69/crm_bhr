@@ -11,10 +11,12 @@ import java.sql.Timestamp;
 @Table(name = "customer")
 public class CustomerEntity {
 
-    public CustomerEntity(String id, String lastName, String firstName, Timestamp createdAt, Timestamp updatedAt) {
+    public CustomerEntity(String id, String lastName, String firstName, String email,String phoneNumber,Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -29,6 +31,10 @@ public class CustomerEntity {
     private String lastName;
     @Column(name = "first_name")
     private String firstName;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
     @Column(name = "created_at")
     private Timestamp createdAt;
 
@@ -59,6 +65,14 @@ public class CustomerEntity {
         this.firstName = firstName;
     }
 
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber; }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -81,6 +95,8 @@ public class CustomerEntity {
                 "id='" + id + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
