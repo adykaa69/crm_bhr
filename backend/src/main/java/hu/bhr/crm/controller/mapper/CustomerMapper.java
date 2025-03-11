@@ -1,6 +1,7 @@
 package hu.bhr.crm.controller.mapper;
 
-import hu.bhr.crm.controller.dto.CustomerDTO;
+import hu.bhr.crm.controller.dto.CustomerRequest;
+import hu.bhr.crm.controller.dto.CustomerResponse;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
@@ -9,28 +10,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerMapper {
 
-    // Entity -> DTO
-    public CustomerDTO mapToCustomerDTO(CustomerEntity customer) {
-        return new CustomerDTO(
+    // Entity -> Response DTO
+    public CustomerResponse mapToCustomerResponse(CustomerEntity customer) {
+        return new CustomerResponse(
                 customer.getId(),
                 customer.getFirstName(),
                 customer.getLastName(),
+                customer.getNickname(),
                 customer.getEmail(),
-                customer.getPhoneNumber()
+                customer.getPhoneNumber(),
+                customer.getConnection(),
+                customer.getCreatedAt(),
+                customer.getUpdatedAt()
         );
     }
 
-    // DTO -> Entity
-    public CustomerEntity mapToCustomerEntity(CustomerDTO customerDTO) {
+    // Request DTO -> Entity
+    public CustomerEntity mapToCustomerEntity(CustomerRequest customerRequest) {
         CustomerEntity customerEntity = new CustomerEntity();
 
-        customerEntity.setId(customerDTO.id());
-        customerEntity.setFirstName(customerDTO.firstName());
-        customerEntity.setLastName(customerDTO.lastName());
-        customerEntity.setEmail(customerDTO.email());
-        customerEntity.setPhoneNumber(customerDTO.phoneNumber());
+        customerEntity.setFirstName(customerRequest.firstName());
+        customerEntity.setLastName(customerRequest.lastName());
+        customerEntity.setNickname(customerRequest.nickname());
+        customerEntity.setEmail(customerRequest.email());
+        customerEntity.setPhoneNumber(customerRequest.phoneNumber());
+        customerEntity.setConnection(customerRequest.connection());
 
         return customerEntity;
 
     }
+
 }
