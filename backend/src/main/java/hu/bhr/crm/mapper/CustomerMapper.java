@@ -5,38 +5,50 @@ import hu.bhr.crm.model.Customer;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
-//TBD - CustomerMapper needed?
-
 @Component
 public class CustomerMapper {
 
     // Entity -> Response DTO
-    public CustomerResponse mapToCustomerResponse(CustomerEntity customer) {
-        return new CustomerResponse(
-                customer.getId(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getNickname(),
-                customer.getEmail(),
-                customer.getPhoneNumber(),
-                customer.getRelationship(),
-                customer.getCreatedAt(),
-                customer.getUpdatedAt()
+    public Customer CustomerEntityToCustomer(CustomerEntity customerEntity) {
+        return new Customer(
+                customerEntity.getId(),
+                customerEntity.getFirstName(),
+                customerEntity.getLastName(),
+                customerEntity.getNickname(),
+                customerEntity.getEmail(),
+                customerEntity.getPhoneNumber(),
+                customerEntity.getRelationship(),
+                customerEntity.getCreatedAt(),
+                customerEntity.getUpdatedAt()
         );
     }
 
-    // Request DTO -> Entity
-    public CustomerEntity mapToCustomerEntity(Customer customer) {
+    // Customer -> Entity
+    public CustomerEntity CustomerToCustomerEntity(Customer customer) {
         CustomerEntity customerEntity = new CustomerEntity();
 
-        customerEntity.setId(customer.getId());
-        customerEntity.setFirstName(customer.getFirstName());
-        customerEntity.setLastName(customer.getLastName());
-        customerEntity.setNickname(customer.getNickname());
-        customerEntity.setEmail(customer.getEmail());
-        customerEntity.setPhoneNumber(customer.getPhoneNumber());
-        customerEntity.setRelationship(customer.getRelationship());
+        customerEntity.setId(customer.id());
+        customerEntity.setFirstName(customer.firstName());
+        customerEntity.setLastName(customer.lastName());
+        customerEntity.setNickname(customer.nickname());
+        customerEntity.setEmail(customer.email());
+        customerEntity.setPhoneNumber(customer.phoneNumber());
+        customerEntity.setRelationship(customer.relationship());
 
         return customerEntity;
+    }
+
+    public CustomerResponse CustomerToCustomerResponse(Customer customer) {
+        return new CustomerResponse(
+                customer.id(),
+                customer.firstName(),
+                customer.lastName(),
+                customer.nickname(),
+                customer.email(),
+                customer.phoneNumber(),
+                customer.relationship(),
+                customer.createdAt(),
+                customer.updatedAt()
+        );
     }
 }

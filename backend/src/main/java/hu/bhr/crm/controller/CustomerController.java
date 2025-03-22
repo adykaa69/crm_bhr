@@ -4,6 +4,7 @@ import hu.bhr.crm.controller.dto.CustomerRequest;
 import hu.bhr.crm.controller.dto.CustomerResponse;
 import hu.bhr.crm.controller.dto.PlatformResponse;
 import hu.bhr.crm.mapper.CustomerFactory;
+import hu.bhr.crm.mapper.CustomerMapper;
 import hu.bhr.crm.model.Customer;
 import hu.bhr.crm.service.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -14,14 +15,16 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CustomerMapper customerMapper;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CustomerMapper customerMapper) {
         this.customerService = customerService;
+        this.customerMapper = customerMapper;
     }
 
     /**
      * Gets one customer by their unique ID.
-     * Responses with 200 OK if the customer is responded with
+     * Responses with 200 OK if the customer is responded with+-
      *
      * @param id the unique ID of the requested customer
      * @return one customer in a {@link PlatformResponse}
@@ -29,7 +32,10 @@ public class CustomerController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PlatformResponse<CustomerResponse> getCustomer(@PathVariable String id) {
-        CustomerResponse customerResponse = customerService.getCustomerById(id);
+
+        Customer customer = customerService.getCustomerById(id);
+
+        CustomerResponse customerResponse = customerMapper.CustomerToCustomerResponse(customer);
 
         return new PlatformResponse<>("success", "Customer retrieved successfully", customerResponse);
     }
@@ -43,9 +49,14 @@ public class CustomerController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PlatformResponse<CustomerResponse> createCustomer(@RequestBody CustomerRequest customerRequest) {
+    public PlatformResponse<CustomerResponse> registerCustomer(@RequestBody CustomerRequest customerRequest) {
+
         Customer customer = CustomerFactory.createCustomer(customerRequest);
-        CustomerResponse customerResponse = customerService.createCustomer(customer);
+
+        Customer createdCustomer = customerService.registerCustomer(customer);
+
+        CustomerResponse customerResponse = customerMapper.CustomerToCustomerResponse(createdCustomer);
+
 
         return new PlatformResponse<>("success", "Customer created successfully", customerResponse);
     }

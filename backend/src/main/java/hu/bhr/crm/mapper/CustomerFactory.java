@@ -3,7 +3,6 @@ package hu.bhr.crm.mapper;
 import hu.bhr.crm.controller.dto.CustomerRequest;
 import hu.bhr.crm.model.Customer;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 public class CustomerFactory {
@@ -11,7 +10,7 @@ public class CustomerFactory {
     /**
      * Builds a Customer from a CustomerRequest.
      *
-     * @param customerRequest the unique ID of the requested customer
+     * @param customerRequest the data transfer object containing the new customer details
      * @return one built customer in a {@link Customer}
      */
     public static Customer createCustomer(CustomerRequest customerRequest) {
@@ -23,8 +22,6 @@ public class CustomerFactory {
                 .email(customerRequest.email())
                 .phoneNumber(customerRequest.phoneNumber())
                 .relationship((customerRequest.relationship()))
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
                 .build();
     }
 }

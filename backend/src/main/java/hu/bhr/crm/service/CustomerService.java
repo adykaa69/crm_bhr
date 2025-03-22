@@ -1,6 +1,5 @@
 package hu.bhr.crm.service;
 
-import hu.bhr.crm.controller.dto.CustomerResponse;
 import hu.bhr.crm.exception.CustomerNotFoundException;
 import hu.bhr.crm.mapper.CustomerMapper;
 import hu.bhr.crm.model.Customer;
@@ -27,13 +26,15 @@ public class CustomerService {
      *
      * @param id the unique ID of the requested customer
      * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
-     * @return one customer in a {@link CustomerResponse}
+     * @return one customer in a {@link Customer}
      */
-    public CustomerResponse getCustomerById(String id) {
-         CustomerEntity customerEntity = repository.findById(id)
+    public Customer getCustomerById(String id) {
+
+        // Find CustomerEntity by ID
+        CustomerEntity customerEntity = repository.findById(id)
                  .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
-         return customerMapper.mapToCustomerResponse(customerEntity);
+        return customerMapper.CustomerEntityToCustomer(customerEntity);
     }
 
     /**
@@ -43,19 +44,19 @@ public class CustomerService {
      * @param customer the built Customer containing the new customer details
      * @throws hu.bhr.crm.exception.InvalidEmailException if the given email is invalid
      * @throws hu.bhr.crm.exception.MissingFieldException if the relationship is not set
-     * @return the created customer in a {@link CustomerResponse}
+     * @return the created customer in a {@link Customer}
      */
-    public CustomerResponse createCustomer(Customer customer) {
+    public Customer registerCustomer(Customer customer) {
 
-        FieldValidation.validateNotEmpty(customer.getRelationship(), "Relationship");
+        FieldValidation.validateNotEmpty(customer.relationship(), "Relationship");
+        EmailValidation.validate(customer.email());
 
-        EmailValidation.validate(customer.getEmail());
+        // Customer -> CustomerEntity
+        CustomerEntity customerEntity = customerMapper.CustomerToCustomerEntity((customer));
 
-        CustomerEntity customerEntity = customerMapper.mapToCustomerEntity((customer));
-
-        // Save Customer to DB
+        // Save CustomerEntity to DB
         customerEntity = repository.save(customerEntity);
 
-        return customerMapper.mapToCustomerResponse(customerEntity);
+        return customer;
     }
 }

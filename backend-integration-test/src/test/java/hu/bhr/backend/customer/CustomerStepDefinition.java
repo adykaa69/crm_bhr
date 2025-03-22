@@ -3,6 +3,7 @@ package hu.bhr.backend.customer;
 import hu.bhr.backend.HttpRequestFactory;
 import hu.bhr.backend.customer.dto.CustomerRequest;
 import hu.bhr.backend.customer.dto.CustomerResponse;
+import hu.bhr.backend.customer.dto.ErrorResponse;
 import hu.bhr.backend.customer.dto.PlatformResponse;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,15 +71,18 @@ public class CustomerStepDefinition {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         }
 
+        // Check if the response contains an error (validation failure)
+        if (response.statusCode() == 500) {
+            PlatformResponse<ErrorResponse> errorResponse =
+                    objectMapper.readValue(response.body(), new TypeReference<PlatformResponse<ErrorResponse>>() {});
+            System.out.println("Validation Error: " + errorResponse.message());
+            return; // Do not proceed further if the request was invalid
+        }
+
         // Deserialize response and store created customer ID
         PlatformResponse<CustomerResponse> platformResponse =
                 objectMapper.readValue(response.body(), new TypeReference<PlatformResponse<CustomerResponse>>() {});
 
-        // Check if the response contains an error (validation failure)
-        if (response.statusCode() == 500) {
-            System.out.println("Validation Error: " + platformResponse.message());
-            return; // Do not proceed further if the request was invalid
-        }
 
         customerResponse = platformResponse.data();
         createdCustomerId = platformResponse.data().id();
@@ -112,4 +116,6 @@ public class CustomerStepDefinition {
         Assert.assertEquals("Phone number should match", customerResponse.phoneNumber(), createdCustomer.phoneNumber());
         Assert.assertEquals("Relationship should match", customerResponse.relationship(), createdCustomer.relationship());
     }
+
+    //PlatformResponse<ErrorResponse> platformResponse = new PlatformResponse<>("success", "msg", new ErrorResponse("timestamp", "success", "error", "path"));
 }
