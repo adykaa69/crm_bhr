@@ -34,7 +34,7 @@ public class CustomerService {
         CustomerEntity customerEntity = repository.findById(id)
                  .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
-        return customerMapper.CustomerEntityToCustomer(customerEntity);
+        return customerMapper.customerEntityToCustomer(customerEntity);
     }
 
     /**
@@ -52,7 +52,7 @@ public class CustomerService {
         EmailValidation.validate(customer.email());
 
         // Customer -> CustomerEntity
-        CustomerEntity customerEntity = customerMapper.CustomerToCustomerEntity((customer));
+        CustomerEntity customerEntity = customerMapper.customerToCustomerEntity((customer));
 
         // Save CustomerEntity to DB
         customerEntity = repository.save(customerEntity);

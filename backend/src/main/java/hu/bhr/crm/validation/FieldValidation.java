@@ -9,7 +9,7 @@ public class FieldValidation {
     }
 
     public static void validateNotEmpty(String field, String fieldName) {
-        if (field == null || field.trim().isEmpty()) {
+        if (field == null || field.isBlank()) {
             throw new MissingFieldException(fieldName + " is required.");
         }
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class CustomerMapper {
 
     // Entity -> Response DTO
-    public Customer CustomerEntityToCustomer(CustomerEntity customerEntity) {
+    public Customer customerEntityToCustomer(CustomerEntity customerEntity) {
         return new Customer(
                 customerEntity.getId(),
                 customerEntity.getFirstName(),
@@ -24,7 +24,7 @@ public class CustomerMapper {
     }
 
     // Customer -> Entity
-    public CustomerEntity CustomerToCustomerEntity(Customer customer) {
+    public CustomerEntity customerToCustomerEntity(Customer customer) {
         CustomerEntity customerEntity = new CustomerEntity();
 
         customerEntity.setId(customer.id());
@@ -38,7 +38,7 @@ public class CustomerMapper {
         return customerEntity;
     }
 
-    public CustomerResponse CustomerToCustomerResponse(Customer customer) {
+    public CustomerResponse customerToCustomerResponse(Customer customer) {
         return new CustomerResponse(
                 customer.id(),
                 customer.firstName(),

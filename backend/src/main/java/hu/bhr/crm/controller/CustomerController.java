@@ -35,7 +35,7 @@ public class CustomerController {
 
         Customer customer = customerService.getCustomerById(id);
 
-        CustomerResponse customerResponse = customerMapper.CustomerToCustomerResponse(customer);
+        CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(customer);
 
         return new PlatformResponse<>("success", "Customer retrieved successfully", customerResponse);
     }
@@ -55,7 +55,7 @@ public class CustomerController {
 
         Customer createdCustomer = customerService.registerCustomer(customer);
 
-        CustomerResponse customerResponse = customerMapper.CustomerToCustomerResponse(createdCustomer);
+        CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(createdCustomer);
 
 
         return new PlatformResponse<>("success", "Customer created successfully", customerResponse);
