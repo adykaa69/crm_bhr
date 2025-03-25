@@ -44,11 +44,14 @@ class EmailValidationTest {
     }
 
     @Test
-    void testLocalPartLengthBoundary() {
+    void testLocalPartLengthBoundaryValid() {
         String localPart64 = "a".repeat(64);
         String validEmail = localPart64 + "@domain.com";
         assertDoesNotThrow(() -> EmailValidation.validate(validEmail));
+    }
 
+    @Test
+    void testLocalPartLengthBoundaryInvalid() {
         String localPart65 = "a".repeat(65);
         String invalidEmail = localPart65 + "@domain.com";
         assertThrows(InvalidEmailException.class, () -> EmailValidation.validate(invalidEmail));
