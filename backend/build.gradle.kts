@@ -27,6 +27,7 @@ repositories {
 
 
 dependencies {
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     // implementation("org.springframework.boot:spring-boot-starter-mail")
@@ -35,6 +36,8 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresVersion")
 
     runtimeOnly ("com.h2database:h2:2.3.232")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // JUnit platform dependencies
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
