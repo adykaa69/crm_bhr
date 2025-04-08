@@ -6,6 +6,7 @@ Feature: Customer API testing
     And I request customer with the created ID
     Then return 200 status code
     Then I delete customer with the created ID
+    And the customer should not exist anymore
 
   Scenario: Add a new customer
     Given I have a new customer with first name "Naruto", last name "Uzumaki", nickname "Narubaba", email "naruto.uzumaki@konoha.jp", phone number "123456789", relationship "hokage"
@@ -13,6 +14,7 @@ Feature: Customer API testing
     Then return 201 status code
     And the response should contain the customer
     Then I delete customer with the created ID
+    And the customer should not exist anymore
 
     # Failure cases are not implemented as long as exceptions are not handled.
 #  Scenario: Add a new customer without relationship
@@ -31,5 +33,6 @@ Feature: Customer API testing
     When I delete customer with the created ID
     Then return 200 status code
     And the response should contain the customer
+    And the customer should not exist anymore
 
 

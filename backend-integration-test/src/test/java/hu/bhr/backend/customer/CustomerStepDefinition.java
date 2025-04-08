@@ -130,4 +130,14 @@ public class CustomerStepDefinition {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         }
     }
+
+    @Then("the customer should not exist anymore")
+    public void theCustomerShouldNotExistAnymore() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = HttpRequestFactory.createGet(SERVICE_URL + String.format(CUSTOMER_BY_ID_PATH, createdCustomerId));
+        try (var client = HttpClient.newHttpClient()) {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+
+        Assert.assertEquals("Customer should not exist after deletion", 404, response.statusCode());
+    }
 }
