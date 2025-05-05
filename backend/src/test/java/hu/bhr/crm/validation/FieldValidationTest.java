@@ -26,4 +26,30 @@ class FieldValidationTest {
     void testWhitespaceField() {
         assertThrows(MissingFieldException.class, () -> FieldValidation.validateNotEmpty("   ", "name"));
     }
+
+
+    @Test
+    void testFirstFieldPresentSecondEmpty() {
+        assertDoesNotThrow(() -> FieldValidation.validateAtLeastOneIsNotEmpty("John", "First Name", "", "Nickname"));
+    }
+
+    @Test
+    void testSecondFieldPresentFirstNull() {
+        assertDoesNotThrow(() -> FieldValidation.validateAtLeastOneIsNotEmpty(null, "First Name", "Johnny", "Nickname"));
+    }
+
+    @Test
+    void testBothFieldsPresent() {
+        assertDoesNotThrow(() -> FieldValidation.validateAtLeastOneIsNotEmpty("John", "First Name", "Johnny", "Nickname"));
+    }
+
+    @Test
+    void testBothFieldsEmpty() {
+        assertThrows(MissingFieldException.class, () -> FieldValidation.validateAtLeastOneIsNotEmpty("", "First Name", "", "Nickname"));
+    }
+
+    @Test
+    void testBothFieldsNull() {
+        assertThrows(MissingFieldException.class, () -> FieldValidation.validateAtLeastOneIsNotEmpty(null, "First Name", null, "Nickname"));
+    }
 }
