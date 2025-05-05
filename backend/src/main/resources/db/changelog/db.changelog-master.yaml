@@ -63,11 +63,9 @@ databaseChangeLog:
               - column:
                   name: first_name
                   type: varchar(255)
-                  constraints:
               - column:
                   name: last_name
                   type: varchar(255)
-                  constraints:
               - column:
                   name: nickname
                   type: varchar(255)
