@@ -6,6 +6,8 @@ import hu.bhr.crm.model.Customer;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class CustomerMapper {
 
@@ -62,7 +64,7 @@ public class CustomerMapper {
         customerEntity.setRelationship(customer.relationship());
     }
 
-    public Customer customerRequestToCustomer(String id, CustomerRequest customerRequest) {
+    public Customer customerRequestToCustomer(UUID id, CustomerRequest customerRequest) {
         return new Customer(
                 id,
                 customerRequest.firstName(),

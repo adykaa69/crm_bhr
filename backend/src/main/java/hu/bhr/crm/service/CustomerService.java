@@ -10,6 +10,7 @@ import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CustomerService {
@@ -30,7 +31,7 @@ public class CustomerService {
      * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
      * @return a {@link Customer} object corresponding to the given ID
      */
-    public Customer getCustomerById(String id) {
+    public Customer getCustomerById(UUID id) {
 
         // Find CustomerEntity by ID
         CustomerEntity customerEntity = repository.findById(id)
@@ -84,7 +85,7 @@ public class CustomerService {
      * @param id the unique ID of the requested customer
      * @return the deleted {@link Customer} object
      */
-    public Customer deleteCustomer(String id) {
+    public Customer deleteCustomer(UUID id) {
         CustomerEntity customerEntity = repository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
@@ -94,7 +95,7 @@ public class CustomerService {
         return deletedCustomer;
     }
 
-    public Customer updateCustomer(String id, Customer customer) {
+    public Customer updateCustomer(UUID id, Customer customer) {
 
         // Find CustomerEntity by ID
         CustomerEntity customerEntity = repository.findById(id)
