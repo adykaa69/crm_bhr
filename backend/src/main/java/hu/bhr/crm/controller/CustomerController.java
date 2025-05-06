@@ -99,5 +99,17 @@ public class CustomerController {
         return new PlatformResponse<>("success", "Customer has been deleted successfully", customerResponse);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlatformResponse<CustomerResponse> updateCustomer(
+            @PathVariable String id,
+            @RequestBody CustomerRequest customerRequest) {
+
+        Customer customer = customerMapper.customerRequestToCustomer(id, customerRequest);
+        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(updatedCustomer);
+
+        return new PlatformResponse<>("success", "Customer updated successfully", customerResponse);
+    }
 }
 

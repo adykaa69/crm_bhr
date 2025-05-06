@@ -93,4 +93,25 @@ public class CustomerService {
 
         return deletedCustomer;
     }
+
+    public Customer updateCustomer(String id, Customer customer) {
+
+        // Find CustomerEntity by ID
+        CustomerEntity customerEntity = repository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+
+        // Validations
+        FieldValidation.validateAtLeastOneIsNotEmpty(customer.firstName(), "First Name", customer.nickname(), "Nickname");
+        FieldValidation.validateNotEmpty(customer.relationship(), "Relationship");
+        EmailValidation.validate(customer.email());
+
+        // Overwrite data
+        customerMapper.updateCustomerEntityFromCustomer(customer, customerEntity);
+
+        // Save CustomerEntity to DB
+        CustomerEntity savedCustomerEntity = repository.save(customerEntity);
+
+        return customerMapper.customerEntityToCustomer(savedCustomerEntity);
+    }
+
 }
