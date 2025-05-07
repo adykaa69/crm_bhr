@@ -115,7 +115,7 @@ public class CustomerController {
             @RequestBody CustomerRequest customerRequest) {
 
         Customer customer = customerMapper.customerRequestToCustomer(id, customerRequest);
-        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        Customer updatedCustomer = customerService.updateCustomer(customer);
         CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(updatedCustomer);
 
         return new PlatformResponse<>("success", "Customer updated successfully", customerResponse);
