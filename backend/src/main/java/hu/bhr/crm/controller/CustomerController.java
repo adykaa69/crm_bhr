@@ -100,6 +100,14 @@ public class CustomerController {
         return new PlatformResponse<>("success", "Customer has been deleted successfully", customerResponse);
     }
 
+    /**
+     * Updates a customer in the database by their unique ID.
+     * Responds with 200 OK if the customer is successfully updated.
+     *
+     * @param id the unique ID of the requested customer
+     * @param customerRequest the data transfer object containing the updated customer details
+     * @return a {@link PlatformResponse} containing the updated {@link CustomerResponse}
+     */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PlatformResponse<CustomerResponse> updateCustomer(

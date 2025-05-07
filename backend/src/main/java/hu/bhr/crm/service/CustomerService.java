@@ -95,6 +95,17 @@ public class CustomerService {
         return deletedCustomer;
     }
 
+    /**
+     * Updates a customer in the database by their unique ID.
+     * Responds with 200 OK if the customer is successfully updated.
+     *
+     * @param id the unique ID of the customer to update
+     * @param customer the mapped Customer containing the updated customer details
+     * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
+     * @throws hu.bhr.crm.exception.MissingFieldException if neither first name nor nickname is set, or if relationship is missing
+     * @throws hu.bhr.crm.exception.InvalidEmailException if the given email is invalid
+     * @return the updated {@link Customer} object
+     */
     public Customer updateCustomer(UUID id, Customer customer) {
 
         // Find CustomerEntity by ID
