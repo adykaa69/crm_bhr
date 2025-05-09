@@ -55,15 +55,6 @@ public class CustomerMapper {
         );
     }
 
-    public void updateCustomerEntityFromCustomer(Customer customer, CustomerEntity customerEntity) {
-        customerEntity.setFirstName(customer.firstName());
-        customerEntity.setLastName(customer.lastName());
-        customerEntity.setNickname(customer.nickname());
-        customerEntity.setEmail(customer.email());
-        customerEntity.setPhoneNumber(customer.phoneNumber());
-        customerEntity.setRelationship(customer.relationship());
-    }
-
     public Customer customerRequestToCustomer(UUID id, CustomerRequest customerRequest) {
         return new Customer(
                 id,

@@ -116,11 +116,8 @@ public class CustomerService {
         FieldValidation.validateNotEmpty(customer.relationship(), "Relationship");
         EmailValidation.validate(customer.email());
 
-        // Overwrite data
-        customerMapper.updateCustomerEntityFromCustomer(customer, customerEntity);
-
         // Save CustomerEntity to DB
-        CustomerEntity savedCustomerEntity = repository.save(customerEntity);
+        CustomerEntity savedCustomerEntity = repository.save(customerMapper.customerToCustomerEntity(customer));
 
         return customerMapper.customerEntityToCustomer(savedCustomerEntity);
     }
