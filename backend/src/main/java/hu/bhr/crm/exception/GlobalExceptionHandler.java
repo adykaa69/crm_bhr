@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CustomerNotFoundException.class)
-    public PlatformResponse<ErrorResponse> handleCustomerNotFound(CustomerNotFoundException ex) {
+    public PlatformResponse<ErrorResponse> handleCustomerNotFoundException(CustomerNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.CUSTOMER_NOT_FOUND.getCode(),
                 ex.getMessage(),
