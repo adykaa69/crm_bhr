@@ -23,4 +23,17 @@ public class GlobalExceptionHandler {
 
         return new PlatformResponse<>("error", "Error occurred during requesting customer", errorResponse);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidEmailException.class)
+    public PlatformResponse<ErrorResponse> handleInvalidEmailException(InvalidEmailException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.EMAIL_INVALID.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during customer registration", errorResponse);
+    }
+
 }
