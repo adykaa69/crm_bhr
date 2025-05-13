@@ -47,4 +47,17 @@ public class GlobalExceptionHandler {
 
         return new PlatformResponse<>("error", "Error occurred during customer registration", errorResponse);
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public PlatformResponse<ErrorResponse> handleGeneralException(Exception e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.INTERNAL_SERVER_ERROR.getCode(),
+                "An unexpected error occurred.",
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Unexpected error during request processing", errorResponse);
+    }
+
 }
