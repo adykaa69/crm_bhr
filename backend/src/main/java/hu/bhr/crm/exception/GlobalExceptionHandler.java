@@ -36,4 +36,15 @@ public class GlobalExceptionHandler {
         return new PlatformResponse<>("error", "Error occurred during customer registration", errorResponse);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingFieldException.class)
+    public PlatformResponse<ErrorResponse> handleMissingFieldException(MissingFieldException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.MISSING_FIELD.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during customer registration", errorResponse);
+    }
 }
