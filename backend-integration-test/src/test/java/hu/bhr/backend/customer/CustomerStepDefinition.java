@@ -7,13 +7,14 @@ import hu.bhr.backend.customer.dto.ErrorResponse;
 import hu.bhr.backend.customer.dto.PlatformResponse;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.*;
 import io.cucumber.java.After;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -36,25 +37,25 @@ public class CustomerStepDefinition {
     private final List<String> createdCustomerIds = new ArrayList<>();
 
     @Given("a new customer is created")
-    public void aNewCustomerIsCreated() throws IOException, URISyntaxException, InterruptedException {
+    public void aNewCustomerIsCreated() throws Exception {
         createNewCustomer(1);
     }
 
     @Given("{int} new customers are created")
-    public void newCustomersAreCreated(int numberOfCustomers) throws IOException, URISyntaxException, InterruptedException {
+    public void newCustomersAreCreated(int numberOfCustomers) throws Exception {
         for (int i = 1; i < numberOfCustomers; i++) {
             createNewCustomer(i);
         }
     }
 
-    public void createNewCustomer(int customerNumber) throws IOException, URISyntaxException, InterruptedException {
+    public void createNewCustomer(int customerNumber) throws Exception {
         CustomerRequest customerRequest = new CustomerRequest(
-                "customerFirstName" + customerNumber,
-                "customerLastName" + customerNumber,
-                "customerNickname" + customerNumber,
+                "customer_FirstName" + customerNumber,
+                "customer_LastName" + customerNumber,
+                "customer_Nickname" + customerNumber,
                 "customer_" + customerNumber + "@email.com",
-                "customerPhoneNumber" + customerNumber,
-                "customerRelationship" + customerNumber
+                "customer_PhoneNumber" + customerNumber,
+                "customer_Relationship" + customerNumber
         );
 
         String requestBody = objectMapper.writeValueAsString(customerRequest);
@@ -89,7 +90,7 @@ public class CustomerStepDefinition {
     }
 
     @When("the customer is retrieved by ID")
-    public void theCustomerIsRetrievedByID() throws IOException, URISyntaxException, InterruptedException {
+    public void theCustomerIsRetrievedByID() throws Exception {
         HttpRequest request = HttpRequestFactory.createGet(SERVICE_URL + String.format(CUSTOMER_BY_ID_PATH, createdCustomerId));
         try (var client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -97,7 +98,7 @@ public class CustomerStepDefinition {
     }
 
     @When("all customers are retrieved")
-    public void allCustomersAreRetrieved() throws IOException, URISyntaxException, InterruptedException {
+    public void allCustomersAreRetrieved() throws Exception {
         HttpRequest request = HttpRequestFactory.createGet(SERVICE_URL + CUSTOMER_PATH);
         try (var client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -105,7 +106,7 @@ public class CustomerStepDefinition {
     }
 
     @Then("the response should contain the customer's details")
-    public void theResponseShouldContainTheCustomerDetails() throws IOException{
+    public void theResponseShouldContainTheCustomerDetails() throws Exception {
         PlatformResponse<CustomerResponse> platformResponse =
                 objectMapper.readValue(response.body(), new TypeReference<PlatformResponse<CustomerResponse>>() {
                 });
@@ -121,7 +122,7 @@ public class CustomerStepDefinition {
     }
 
     @Then("the response should contain all customer's details")
-    public void theResponseShouldContainAllCustomersDetails() throws IOException {
+    public void theResponseShouldContainAllCustomersDetails() throws Exception {
         PlatformResponse<List<CustomerResponse>> platformResponse =
                 objectMapper.readValue(response.body(), new TypeReference<PlatformResponse<List<CustomerResponse>>>() {});
 
@@ -139,7 +140,7 @@ public class CustomerStepDefinition {
     }
 
     @Given("the customer database is empty")
-    public void theCustomerDatabaseIsEmpty() throws IOException, URISyntaxException, InterruptedException {
+    public void theCustomerDatabaseIsEmpty() throws Exception {
         allCustomersAreRetrieved();
 
         PlatformResponse<List<CustomerResponse>> platformResponse =
@@ -149,7 +150,7 @@ public class CustomerStepDefinition {
     }
 
     @When("the created customer is deleted")
-    public void theCreatedCustomerIsDeleted() throws URISyntaxException, IOException, InterruptedException {
+    public void theCreatedCustomerIsDeleted() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new java.net.URI(SERVICE_URL + CUSTOMER_PATH + "/" + createdCustomerId))
                 .DELETE()
@@ -163,7 +164,7 @@ public class CustomerStepDefinition {
     }
 
     @And("the created customer should no longer exist in the database")
-    public void theCreatedCustomerShouldNoLongerExistInTheDatabase() throws URISyntaxException, IOException, InterruptedException {
+    public void theCreatedCustomerShouldNoLongerExistInTheDatabase() throws Exception {
         HttpRequest request = HttpRequestFactory.createGet(SERVICE_URL + String.format(CUSTOMER_BY_ID_PATH, createdCustomerId));
         try (var client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -173,7 +174,7 @@ public class CustomerStepDefinition {
     }
 
     @When("the created customer's details are updated")
-    public void theCreatedCustomerDetailsAreUpdated() throws URISyntaxException, IOException, InterruptedException {
+    public void theCreatedCustomerDetailsAreUpdated() throws Exception {
         CustomerRequest updatedRequest = new CustomerRequest(
                 "updatedCustomerFirstName",
                 "updatedCustomerLastName",
@@ -202,12 +203,12 @@ public class CustomerStepDefinition {
     }
 
     @Then("the response should contain the updated customer's details")
-    public void theResponseShouldContainTheUpdatedCustomerDetails() throws IOException {
+    public void theResponseShouldContainTheUpdatedCustomerDetails() throws Exception {
         theResponseShouldContainTheCustomerDetails();
     }
 
     @After
-    public void cleanUpAfterScenario() throws URISyntaxException, IOException, InterruptedException {
+    public void cleanUpAfterScenario() throws Exception {
         if (!createdCustomerIds.isEmpty()) {
             for (String id: createdCustomerIds) {
                 HttpRequest request = HttpRequest.newBuilder()
