@@ -15,6 +15,7 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -64,7 +65,7 @@ public class CustomerStepDefinition {
         String requestBody = objectMapper.writeValueAsString(customerRequest);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new java.net.URI(SERVICE_URL + CUSTOMER_PATH))
+                .uri(new URI(SERVICE_URL + CUSTOMER_PATH))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody, StandardCharsets.UTF_8))
                 .build();
@@ -147,7 +148,7 @@ public class CustomerStepDefinition {
     @When("the created customer is deleted")
     public void theCreatedCustomerIsDeleted() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new java.net.URI(SERVICE_URL + CUSTOMER_PATH + "/" + createdCustomerId))
+                .uri(new URI(SERVICE_URL + CUSTOMER_PATH + "/" + createdCustomerId))
                 .DELETE()
                 .build();
 
@@ -186,7 +187,7 @@ public class CustomerStepDefinition {
         String requestBody = objectMapper.writeValueAsString(updatedRequest);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new java.net.URI(SERVICE_URL + String.format(CUSTOMER_BY_ID_PATH, createdCustomerId)))
+                .uri(new URI(SERVICE_URL + String.format(CUSTOMER_BY_ID_PATH, createdCustomerId)))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody, StandardCharsets.UTF_8))
                 .build();
@@ -268,7 +269,7 @@ public class CustomerStepDefinition {
     @When("the customer with ID {string} is requested to be deleted")
     public void theCustomerWithNonExistingIdIsRequestedToBeDeleted(String ID) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new java.net.URI(SERVICE_URL + CUSTOMER_PATH + "/" + ID))
+                .uri(new URI(SERVICE_URL + CUSTOMER_PATH + "/" + ID))
                 .DELETE()
                 .build();
 
@@ -321,7 +322,7 @@ public class CustomerStepDefinition {
         if (!createdCustomerIds.isEmpty()) {
             for (String id: createdCustomerIds) {
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(new java.net.URI(SERVICE_URL+ CUSTOMER_PATH + "/" + id))
+                        .uri(new URI(SERVICE_URL+ CUSTOMER_PATH + "/" + id))
                         .DELETE()
                         .build();
 
