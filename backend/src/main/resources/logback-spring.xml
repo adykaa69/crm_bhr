@@ -13,7 +13,7 @@
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${CRM_BACKEND_LOG_PATH}/crm-backend.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${CRM_BACKEND_LOG_PATH}/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${CRM_BACKEND_LOG_PATH}/crm-backend.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>30</maxHistory>
             <maxFileSize>10MB</maxFileSize>
             <totalSizeCap>1GB</totalSizeCap>
@@ -23,21 +23,16 @@
         </encoder>
     </appender>
 
-    <!-- Root logger -->
-    <root level="INFO">
-        <appender-ref ref="Console" />
-    </root>
-
     <!-- DEV profile -->
     <springProfile name="dev">
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="Console" />
         </root>
     </springProfile>
 
     <!-- PROD profile -->
     <springProfile name="prod">
-        <root level="WARN">
+        <root level="INFO">
             <appender-ref ref="Console" />
             <appender-ref ref="File" />
         </root>

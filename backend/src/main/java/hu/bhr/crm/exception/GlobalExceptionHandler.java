@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CustomerNotFoundException.class)
     public PlatformResponse<ErrorResponse> handleCustomerNotFoundException(CustomerNotFoundException ex) {
-        log.warn("Customer not found: {}", ex.getMessage());
+        log.warn("Customer not found", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.CUSTOMER_NOT_FOUND.getCode(),
                 ex.getMessage(),
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidEmailException.class)
     public PlatformResponse<ErrorResponse> handleInvalidEmailException(InvalidEmailException ex) {
-        log.warn("Invalid email exception: {}", ex.getMessage());
+        log.warn("Invalid email exception", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.EMAIL_INVALID.getCode(),
                 ex.getMessage(),
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingFieldException.class)
     public PlatformResponse<ErrorResponse> handleMissingFieldException(MissingFieldException ex) {
-        log.warn("Missing field exception: {}", ex.getMessage());
+        log.warn("Missing field exception", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.MISSING_FIELD.getCode(),
                 ex.getMessage(),
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public PlatformResponse<ErrorResponse> handleGeneralException(Exception ex) {
-        log.error("Unexpected error occurred: {}", ex.getMessage());
+        log.error("Unexpected error occurred", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.INTERNAL_SERVER_ERROR.getCode(),
                 "An unexpected error occurred.",
