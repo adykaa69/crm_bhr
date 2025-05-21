@@ -76,13 +76,6 @@ public class CustomerController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PlatformResponse<CustomerResponse> registerCustomer(@RequestBody CustomerRequest customerRequest) {
-
-        if (customerRequest.nickname() != null && !customerRequest.nickname().isEmpty()) {
-            log.debug("Registering customer with nickname: {}", customerRequest.nickname());
-        } else if (customerRequest.firstName() != null && !customerRequest.firstName().isEmpty()) {
-            log.debug("Registering customer with first name: {}", customerRequest.firstName());
-        }
-
         Customer customer = CustomerFactory.createCustomer(customerRequest);
         Customer createdCustomer = customerService.registerCustomer(customer);
         CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(createdCustomer);

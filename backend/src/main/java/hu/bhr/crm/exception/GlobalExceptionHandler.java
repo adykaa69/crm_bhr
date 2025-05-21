@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public PlatformResponse<ErrorResponse> handleGeneralException(Exception e) {
-        log.error("Unexpected error occurred", e);
+    public PlatformResponse<ErrorResponse> handleGeneralException(Exception ex) {
+        log.error("Unexpected error occurred: {}", ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.INTERNAL_SERVER_ERROR.getCode(),
                 "An unexpected error occurred.",
