@@ -11,7 +11,7 @@ public record CustomerResponse(
         String email,
         String phoneNumber,
         String relationship,
-        ResidenceResponse residenceResponse,
+        ResidenceResponse residence,
         Timestamp createdAt,
         Timestamp updatedAt
 ) {}

@@ -60,8 +60,10 @@ public class CustomerMapper {
     }
 
     public CustomerResponse customerToCustomerResponse(Customer customer) {
-        ResidenceResponse residenceResponse = customer.residence() == null ? null :
-                residenceMapper.residenceToResidenceResponse(customer.residence());
+        ResidenceResponse residenceResponse = null;
+        if (customer.residence() != null) {
+            residenceResponse = residenceMapper.residenceToResidenceResponse(customer.residence());
+        }
 
         return new CustomerResponse(
                 customer.id(),
@@ -86,7 +88,7 @@ public class CustomerMapper {
                 customerRequest.email(),
                 customerRequest.phoneNumber(),
                 customerRequest.relationship(),
-                residenceMapper.residenceRequestToResidence(customerRequest.residenceRequest()),
+                residenceMapper.residenceRequestToResidence(customerRequest.residence()),
                 null,
                 null
         );

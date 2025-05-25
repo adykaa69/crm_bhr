@@ -53,10 +53,16 @@ public class ResidenceEntity {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "residence")
     private CustomerEntity customer;
+
+    public CustomerEntity getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerEntity customer) {
+        this.customer = customer;
+    }
 
     public UUID getId() {
         return id;

@@ -108,6 +108,9 @@ public class CustomerEntity {
 
     public void setResidence(ResidenceEntity residence) {
         this.residence = residence;
+        if (residence != null) {
+            residence.setCustomer(this);
+        }
     }
 
     public Timestamp getCreatedAt() {

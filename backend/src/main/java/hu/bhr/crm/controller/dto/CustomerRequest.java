@@ -7,5 +7,5 @@ public record CustomerRequest(
         String email,
         String phoneNumber,
         String relationship,
-        ResidenceRequest residenceRequest
+        ResidenceRequest residence
 ) {}

@@ -7,6 +7,12 @@ import java.util.UUID;
 
 public class ResidenceFactory {
 
+    /**
+     * Builds a Residence from a ResidenceRequest.
+     *
+     * @param residenceRequest the data transfer object containing the new residence details
+     * @return one built residence in a {@link Residence}
+     */
     public static Residence createResidence(ResidenceRequest residenceRequest) {
         return Residence.builder()
                 .id(UUID.randomUUID())
