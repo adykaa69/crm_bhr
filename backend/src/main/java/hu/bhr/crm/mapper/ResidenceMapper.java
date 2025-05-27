@@ -57,6 +57,10 @@ public class ResidenceMapper {
     }
 
     public Residence residenceRequestToResidence(ResidenceRequest residenceRequest) {
+        if (residenceRequest == null) {
+            return null;
+        }
+
         return Residence.builder()
                 .zipCode(residenceRequest.zipCode())
                 .streetAddress(residenceRequest.streetAddress())
