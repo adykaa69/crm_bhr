@@ -2,7 +2,9 @@ package hu.bhr.crm.service;
 
 import hu.bhr.crm.exception.CustomerNotFoundException;
 import hu.bhr.crm.mapper.CustomerMapper;
+import hu.bhr.crm.mapper.ResidenceMapper;
 import hu.bhr.crm.model.Customer;
+import hu.bhr.crm.model.Residence;
 import hu.bhr.crm.repository.CustomerRepository;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import hu.bhr.crm.validation.EmailValidation;
@@ -17,10 +19,12 @@ public class CustomerService {
 
     private final CustomerRepository repository;
     private final CustomerMapper customerMapper;
+    private final ResidenceMapper residenceMapper;
 
-    public CustomerService(CustomerRepository repository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository repository, CustomerMapper customerMapper, ResidenceMapper residenceMapper) {
         this.repository = repository;
         this.customerMapper = customerMapper;
+        this.residenceMapper = residenceMapper;
     }
 
     /**
@@ -117,8 +121,21 @@ public class CustomerService {
         FieldValidation.validateNotEmpty(customer.relationship(), "Relationship");
         EmailValidation.validate(customer.email());
 
+        Residence existingResidence = residenceMapper.residenceEntityToResidence(customerEntity.getResidence());
+        Residence updatedResidence = customer.residence();
+
+        if (updatedResidence != null && updatedResidence.id() == null) {
+            if (existingResidence != null) {
+                updatedResidence = updatedResidence.withId(existingResidence.id());
+            } else {
+                updatedResidence = updatedResidence.withId(UUID.randomUUID());
+            }
+        }
+
+        Customer updatedCustomer = customer.withResidence(updatedResidence);
+
         // Save CustomerEntity to DB
-        CustomerEntity savedCustomerEntity = repository.save(customerMapper.customerToCustomerEntity(customer));
+        CustomerEntity savedCustomerEntity = repository.save(customerMapper.customerToCustomerEntity(updatedCustomer));
 
         return customerMapper.customerEntityToCustomer(savedCustomerEntity);
     }

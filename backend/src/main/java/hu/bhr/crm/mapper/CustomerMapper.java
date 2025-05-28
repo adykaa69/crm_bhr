@@ -79,18 +79,11 @@ public class CustomerMapper {
         );
     }
 
-    public Customer customerRequestToCustomer(UUID id, CustomerRequest customerRequest, UUID residenceId) {
+    public Customer customerRequestToCustomer(UUID id, CustomerRequest customerRequest) {
         Residence residence = null;
 
-        // Request for existing residence
-        if (customerRequest.residence() != null && residenceId != null) {
-            residence = residenceMapper.residenceRequestToResidence(customerRequest.residence()).withId(residenceId);
-        }
-
-        // Request for non-existing residence
-        if (customerRequest.residence() != null && residenceId == null) {
-            System.out.println("There is request for residence, but no id yet");
-            residence = ResidenceFactory.createResidence(customerRequest.residence());
+        if (customerRequest.residence() != null) {
+            residence = residenceMapper.residenceRequestToResidence(customerRequest.residence());
         }
 
         return new Customer(

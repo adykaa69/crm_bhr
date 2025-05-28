@@ -118,14 +118,7 @@ public class CustomerController {
             @RequestBody CustomerRequest customerRequest) {
 
         log.debug("Updating customer with id: {}", id);
-
-        // Get residenceId
-        Customer customer = customerService.getCustomerById(id);
-        UUID residenceId = customer.residence() != null
-                ? customer.residence().id()
-                : null;
-
-        customer = customerMapper.customerRequestToCustomer(id, customerRequest, residenceId);
+        Customer customer = customerMapper.customerRequestToCustomer(id, customerRequest);
         Customer updatedCustomer = customerService.updateCustomer(customer);
         CustomerResponse customerResponse = customerMapper.customerToCustomerResponse(updatedCustomer);
         log.info("Customer updated successfully with id: {}", id);
