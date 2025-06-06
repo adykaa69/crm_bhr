@@ -39,6 +39,8 @@ services:
     env_file: ../../env_files/crm.env
     environment:
       MONGO_INITDB_DATABASE: crm
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD}
     networks:
       - backend
 
