@@ -1,16 +1,3 @@
-spring:
-  datasource:
-    url: ${POSTGRES_JDBC_URL}
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
-    driverClassName: org.postgresql.Driver
-
-  data:
-    mongodb:
-      uri: ${MONGODB_URI}
-      username: ${MONGODB_ROOT_USERNAME}
-      password: ${MONGODB_ROOT_PASSWORD}
-
 logging:
   file:
     path: ${LOG_PATH:logs}
