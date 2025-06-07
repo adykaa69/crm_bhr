@@ -3,28 +3,35 @@ package hu.bhr.crm.repository.mongo.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Document
 public class CustomerDocument {
 
     @Id
-    String id;
+    UUID id;
     String customerId;
     String notes;
+    Instant createdAt;
+    Instant updatedAt;
 
     public CustomerDocument() {
     }
 
-    public CustomerDocument(String id, String customerId, String notes) {
+    public CustomerDocument(UUID id, String customerId, String notes, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.customerId = customerId;
         this.notes = notes;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -42,6 +49,22 @@ public class CustomerDocument {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
