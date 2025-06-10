@@ -32,7 +32,7 @@ public class CustomerDetailsService {
      * @throws hu.bhr.crm.exception.MissingFieldException if field "notes" is missing
      */
     public CustomerDetails saveCustomerDetails(CustomerDetails customerDetails) {
-        FieldValidation.validateNotEmpty(customerDetails.notes(), "Field \"notes\"");
+        FieldValidation.validateNotEmpty(customerDetails.notes(), "Field 'notes'");
 
         if (!customerRepository.existsById(customerDetails.customerId())) {
             throw new CustomerNotFoundException("Customer not found");

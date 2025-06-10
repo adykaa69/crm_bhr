@@ -1,22 +1,34 @@
 package hu.bhr.crm.repository.mongo.document;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Document
-public class CustomerDocument {
+public class CustomerDocument implements Persistable<UUID> {
 
     @Id
-    UUID id;
-    UUID customerId;
-    String notes;
-    Instant createdAt;
-    Instant updatedAt;
+    private UUID id;
+    private UUID customerId;
+    private String notes;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 
     public CustomerDocument() {
+    }
+
+    @Override
+    public boolean isNew() {
+        return getCreatedAt() == null;
     }
 
     public CustomerDocument(UUID id, UUID customerId, String notes, Instant createdAt, Instant updatedAt) {
