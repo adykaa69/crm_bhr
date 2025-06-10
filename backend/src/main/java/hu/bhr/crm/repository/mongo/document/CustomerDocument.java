@@ -11,7 +11,7 @@ public class CustomerDocument {
 
     @Id
     UUID id;
-    String customerId;
+    UUID customerId;
     String notes;
     Instant createdAt;
     Instant updatedAt;
@@ -19,7 +19,7 @@ public class CustomerDocument {
     public CustomerDocument() {
     }
 
-    public CustomerDocument(UUID id, String customerId, String notes, Instant createdAt, Instant updatedAt) {
+    public CustomerDocument(UUID id, UUID customerId, String notes, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.customerId = customerId;
         this.notes = notes;
@@ -35,11 +35,11 @@ public class CustomerDocument {
         this.id = id;
     }
 
-    public String getCustomerId() {
+    public UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
