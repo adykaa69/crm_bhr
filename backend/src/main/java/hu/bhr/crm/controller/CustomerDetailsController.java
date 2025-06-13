@@ -27,6 +27,13 @@ public class CustomerDetailsController {
         this.mapper = mapper;
     }
 
+    /**
+     * Creates new customer details and stores it in the database.
+     * Responds with 201 Created if the customer is successfully created.
+     *
+     * @param request the data transfer object containing the new customer details
+     * @return a {@link PlatformResponse} containing the created {@link CustomerDetailsResponse}
+     */
     @PostMapping("/{customerId}/details")
     @ResponseStatus(HttpStatus.CREATED)
     public PlatformResponse<CustomerDetailsResponse> registerCustomerDetails(

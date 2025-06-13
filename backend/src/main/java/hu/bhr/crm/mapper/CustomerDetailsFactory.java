@@ -11,7 +11,7 @@ public class CustomerDetailsFactory {
         return CustomerDetails.builder()
                 .id(UUID.randomUUID())
                 .customerId(customerId)
-                .notes(customerDetailsRequest.notes())
+                .note(customerDetailsRequest.note())
                 .build();
     }
 }

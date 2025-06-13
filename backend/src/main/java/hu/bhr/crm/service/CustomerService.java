@@ -7,7 +7,6 @@ import hu.bhr.crm.model.Residence;
 import hu.bhr.crm.repository.CustomerRepository;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import hu.bhr.crm.repository.entity.ResidenceEntity;
-import hu.bhr.crm.repository.mongo.CustomerDocumentRepository;
 import hu.bhr.crm.validation.EmailValidation;
 import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,12 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository repository;
-    private final CustomerDocumentRepository customerDocumentRepository;
+    private final CustomerDetailsService customerDetailsService;
     private final CustomerMapper customerMapper;
 
-    public CustomerService(CustomerRepository repository, CustomerDocumentRepository customerDocumentRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository repository, CustomerDetailsService customerDetailsService, CustomerMapper customerMapper) {
         this.repository = repository;
-        this.customerDocumentRepository = customerDocumentRepository;
+        this.customerDetailsService = customerDetailsService;
         this.customerMapper = customerMapper;
     }
 
@@ -88,8 +87,8 @@ public class CustomerService {
         Customer deletedCustomer = customerMapper.customerEntityToCustomer(customerEntity);
         repository.deleteById(id);
 
-        // Delete documents related to the customer
-        customerDocumentRepository.deleteAllByCustomerId(id);
+        // Delete all documents related to the customer
+        customerDetailsService.deleteCustomerDetailsByCustomerId(id);
 
         return deletedCustomer;
     }

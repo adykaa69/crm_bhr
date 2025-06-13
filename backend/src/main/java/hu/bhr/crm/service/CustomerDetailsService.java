@@ -9,6 +9,8 @@ import hu.bhr.crm.repository.mongo.document.CustomerDocument;
 import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class CustomerDetailsService {
 
@@ -24,15 +26,14 @@ public class CustomerDetailsService {
 
     /**
      * Creates new customer details and stores them in the database.
-     * Responds with 201 Created if the details are successfully created.
      *
      * @param customerDetails the built CustomerDetails containing the new customer details
      * @return the created {@link CustomerDetails} object
      * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
-     * @throws hu.bhr.crm.exception.MissingFieldException if field "notes" is missing
+     * @throws hu.bhr.crm.exception.MissingFieldException if field "note" is missing
      */
     public CustomerDetails saveCustomerDetails(CustomerDetails customerDetails) {
-        FieldValidation.validateNotEmpty(customerDetails.notes(), "Field 'notes'");
+        FieldValidation.validateNotEmpty(customerDetails.note(), "Note");
 
         if (!customerRepository.existsById(customerDetails.customerId())) {
             throw new CustomerNotFoundException("Customer not found");
@@ -42,5 +43,10 @@ public class CustomerDetailsService {
         CustomerDocument savedDocument = customerDocumentRepository.save(customerDocument);
 
         return mapper.customerDocumentToCustomerDetails(savedDocument);
+    }
+
+    public void deleteCustomerDetailsByCustomerId(UUID customerId) {
+        // Delete all documents related a customer
+        customerDocumentRepository.deleteAllByCustomerId(customerId);
     }
 }

@@ -1,5 +1,5 @@
 package hu.bhr.crm.controller.dto;
 
 public record CustomerDetailsRequest(
-        String notes
+        String note
 ) {}

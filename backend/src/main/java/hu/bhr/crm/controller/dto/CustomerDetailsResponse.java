@@ -6,7 +6,7 @@ import java.util.UUID;
 public record CustomerDetailsResponse(
         UUID id,
         UUID customerId,
-        String notes,
+        String note,
         Instant createdAt,
         Instant updatedAt
 ) {}

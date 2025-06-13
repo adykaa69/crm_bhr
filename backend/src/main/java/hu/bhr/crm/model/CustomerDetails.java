@@ -6,7 +6,7 @@ import java.util.UUID;
 public record CustomerDetails(
         UUID id,
         UUID customerId,
-        String notes,
+        String note,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -18,7 +18,7 @@ public record CustomerDetails(
     public static class CustomerDetailsBuilder {
         private UUID id;
         private UUID customerId;
-        private String notes;
+        private String note;
         private Instant createdAt;
         private Instant updatedAt;
 
@@ -32,8 +32,8 @@ public record CustomerDetails(
             return this;
         }
 
-        public CustomerDetailsBuilder notes(String notes) {
-            this.notes = notes;
+        public CustomerDetailsBuilder note(String note) {
+            this.note = note;
             return this;
         }
 
@@ -48,7 +48,7 @@ public record CustomerDetails(
         }
 
         public CustomerDetails build() {
-            return new CustomerDetails(id, customerId, notes, createdAt, updatedAt);
+            return new CustomerDetails(id, customerId, note, createdAt, updatedAt);
         }
     }
 }

@@ -15,7 +15,7 @@ public class CustomerDocument implements Persistable<UUID> {
     @Id
     private UUID id;
     private UUID customerId;
-    private String notes;
+    private String note;
 
     @CreatedDate
     private Instant createdAt;
@@ -31,10 +31,10 @@ public class CustomerDocument implements Persistable<UUID> {
         return getCreatedAt() == null;
     }
 
-    public CustomerDocument(UUID id, UUID customerId, String notes, Instant createdAt, Instant updatedAt) {
+    public CustomerDocument(UUID id, UUID customerId, String note, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.customerId = customerId;
-        this.notes = notes;
+        this.note = note;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -55,12 +55,12 @@ public class CustomerDocument implements Persistable<UUID> {
         this.customerId = customerId;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getNote() {
+        return note;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Instant getCreatedAt() {
@@ -84,7 +84,7 @@ public class CustomerDocument implements Persistable<UUID> {
         return "CustomerDocument{" +
                 "id='" + id + '\'' +
                 ", customerId='" + customerId + '\'' +
-                ", notes='" + notes + '\'' +
+                ", note='" + note + '\'' +
                 '}';
     }
 }
