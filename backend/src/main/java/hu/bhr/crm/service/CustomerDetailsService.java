@@ -9,6 +9,7 @@ import hu.bhr.crm.repository.mongo.document.CustomerDocument;
 import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,6 +23,32 @@ public class CustomerDetailsService {
         this.customerDocumentRepository = customerDocumentRepository;
         this.mapper = mapper;
         this.customerRepository = customerRepository;
+    }
+
+    /**
+     * Gets customer details by their unique ID.
+     *
+     * @param id the unique ID of the requested customer details
+     * @return a {@link CustomerDetails} object corresponding to the given ID
+     * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
+     */
+    public CustomerDetails getCustomerDetailsById(UUID id) {
+        CustomerDocument customerDocument = customerDocumentRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer details not found"));
+
+        return mapper.customerDocumentToCustomerDetails(customerDocument);
+    }
+
+    /**
+     * Gets all customer details for a specific customer by their unique ID.
+     *
+     * @param customerId the unique ID of the customer whose details are requested
+     * @return a list of {@link CustomerDetails} objects corresponding to the given customer ID
+     */
+    public List<CustomerDetails> getAllCustomerDetails(UUID customerId) {
+        return customerDocumentRepository.findAllByCustomerId(customerId).stream()
+                .map(mapper::customerDocumentToCustomerDetails)
+                .toList();
     }
 
     /**

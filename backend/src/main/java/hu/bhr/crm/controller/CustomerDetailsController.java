@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +26,44 @@ public class CustomerDetailsController {
     public CustomerDetailsController(CustomerDetailsService service, CustomerDetailsMapper mapper) {
         this.service = service;
         this.mapper = mapper;
+    }
+
+    /**
+     * Gets customer details by their unique ID.
+     * Responds with 200 OK if the customer details are found.
+     *
+     * @param id the unique ID of the requested customer details
+     * @return a {@link PlatformResponse} containing a {@link CustomerDetailsResponse}
+     */
+    @GetMapping("/details/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlatformResponse<CustomerDetailsResponse> getCustomerDetails(@PathVariable UUID id) {
+        log.debug("Fetching customer details with id: {}", id);
+        CustomerDetails customerDetails = service.getCustomerDetailsById(id);
+        CustomerDetailsResponse customerDetailsResponse = mapper.customerDetailsToCustomerDetailsResponse(customerDetails);
+        log.info("Customer details with id {} retrieved successfully", id);
+
+        return new PlatformResponse<>("success", "Customer details retrieved successfully", customerDetailsResponse);
+    }
+
+    /**
+     * Gets all customer details for a specific customer by their unique ID.
+     * Responds with 200 OK if the customer details are found.
+     *
+     * @param customerId the unique ID of the customer whose details are requested
+     * @return a {@link PlatformResponse} containing a list of {@link CustomerDetailsResponse}
+     */
+    @GetMapping("/{customerId}/details")
+    @ResponseStatus(HttpStatus.OK)
+    public PlatformResponse<List<CustomerDetailsResponse>> getAllCustomerDetails(@PathVariable UUID customerId) {
+        log.debug("Fetching all customer details for customer with id: {}", customerId);
+        List<CustomerDetails> customerDetailsList = service.getAllCustomerDetails(customerId);
+        List<CustomerDetailsResponse> customerDetailsResponses = customerDetailsList.stream()
+                .map(mapper::customerDetailsToCustomerDetailsResponse)
+                .toList();
+        log.info("All customer details for customer with id {} retrieved successfully", customerId);
+
+        return new PlatformResponse<>("success", "All customer details retrieved successfully", customerDetailsResponses);
     }
 
     /**
