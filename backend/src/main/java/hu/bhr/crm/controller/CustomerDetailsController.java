@@ -104,4 +104,27 @@ public class CustomerDetailsController {
 
         return new PlatformResponse<>("success", "Customer details deleted successfully", customerDetailsResponse);
     }
+
+    /**
+     * Updates customer details by their unique ID.
+     * Responds with 200 OK if the customer details are successfully updated.
+     *
+     * @param id the unique ID of the customer details to be updated
+     * @param customerDetailsRequest the data transfer object containing the updated customer details
+     * @return a {@link PlatformResponse} containing the updated {@link CustomerDetailsResponse}
+     */
+    @PutMapping("/details/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlatformResponse<CustomerDetailsResponse> updateCustomerDetails(
+            @PathVariable UUID id,
+            @RequestBody CustomerDetailsRequest customerDetailsRequest) {
+
+        log.debug("Updating customer details with id: {}", id);
+        CustomerDetails customerDetails = mapper.customerDetailsRequestToCustomerDetails(id, customerDetailsRequest);
+        CustomerDetails updatedCustomerDetails = service.updateCustomerDetails(customerDetails);
+        CustomerDetailsResponse customerDetailsResponse = mapper.customerDetailsToCustomerDetailsResponse(updatedCustomerDetails);
+        log.info("Customer details with id {} updated successfully", id);
+
+        return new PlatformResponse<>("success", "Customer details updated successfully", customerDetailsResponse);
+    }
 }

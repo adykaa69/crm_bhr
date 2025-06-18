@@ -88,6 +88,34 @@ public class CustomerDetailsService {
         return deletedCustomerDetails;
     }
 
+    /**
+     * Updates existing customer details.
+     *
+     * @param customerDetails the updated CustomerDetails object
+     * @return the updated {@link CustomerDetails} object
+     * @throws CustomerNotFoundException if the customer details with the given ID do not exist (returns HTTP 404 Not Found)
+     * @throws hu.bhr.crm.exception.MissingFieldException if field "note" is missing
+     */
+    public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails) {
+        FieldValidation.validateNotEmpty(customerDetails.note(), "Note");
+
+        // Check if the customer details exist
+        CustomerDocument existingDocument = customerDocumentRepository.findById(customerDetails.id())
+                .orElseThrow(() -> new CustomerNotFoundException("Customer details not found"));
+
+        // Check if the customer exists
+        UUID customerId = existingDocument.getCustomerId();
+        if (!customerRepository.existsById(customerId)) {
+            throw new CustomerNotFoundException("Customer not found");
+        }
+
+        // Update the existing document with new values
+        existingDocument.setNote(customerDetails.note());
+
+        CustomerDocument updatedDocument = customerDocumentRepository.save(existingDocument);
+        return mapper.customerDocumentToCustomerDetails(updatedDocument);
+    }
+
     public void deleteCustomerDetailsByCustomerId(UUID customerId) {
         // Delete all documents related a customer
         customerDocumentRepository.deleteAllByCustomerId(customerId);
