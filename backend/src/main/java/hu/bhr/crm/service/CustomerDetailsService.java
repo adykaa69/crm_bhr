@@ -72,6 +72,22 @@ public class CustomerDetailsService {
         return mapper.customerDocumentToCustomerDetails(savedDocument);
     }
 
+    /**
+     * Deletes customer details by their unique ID.
+     *
+     * @param id the unique ID of the customer details to be deleted
+     * @return the deleted {@link CustomerDetails} object
+     * @throws CustomerNotFoundException if the customer details with the given ID do not exist (returns HTTP 404 Not Found)
+     */
+    public CustomerDetails deleteCustomerDetailsById(UUID id) {
+        CustomerDocument customerDocument = customerDocumentRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer details not found"));
+
+        CustomerDetails deletedCustomerDetails = mapper.customerDocumentToCustomerDetails(customerDocument);
+        customerDocumentRepository.delete(customerDocument);
+        return deletedCustomerDetails;
+    }
+
     public void deleteCustomerDetailsByCustomerId(UUID customerId) {
         // Delete all documents related a customer
         customerDocumentRepository.deleteAllByCustomerId(customerId);

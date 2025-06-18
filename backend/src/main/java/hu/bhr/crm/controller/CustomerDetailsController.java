@@ -86,4 +86,22 @@ public class CustomerDetailsController {
 
         return new PlatformResponse<>("success", "Customer details saved successfully", customerDetailsResponse);
     }
+
+    /**
+     * Deletes customer details by their unique ID.
+     * Responds with 200 OK if the customer details are successfully deleted.
+     *
+     * @param id the unique ID of the customer details to be deleted
+     * @return a {@link PlatformResponse} containing the deleted {@link CustomerDetailsResponse}
+     */
+    @DeleteMapping("/details/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlatformResponse<CustomerDetailsResponse> deleteCustomerDetails(@PathVariable UUID id) {
+        log.debug("Deleting customer details with id: {}", id);
+        CustomerDetails deletedCustomerDetails = service.deleteCustomerDetailsById(id);
+        CustomerDetailsResponse customerDetailsResponse = mapper.customerDetailsToCustomerDetailsResponse(deletedCustomerDetails);
+        log.info("Customer details with id {} deleted successfully", id);
+
+        return new PlatformResponse<>("success", "Customer details deleted successfully", customerDetailsResponse);
+    }
 }
