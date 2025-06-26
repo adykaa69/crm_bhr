@@ -13,7 +13,16 @@ databaseChangeLog:
       labels: table creation
       changes:
         - sql:
-            sql: "CREATE TYPE status AS ENUM ('Open', 'Completed');"
+            sql: "CREATE TYPE status AS ENUM (
+                    'open',
+                    'in_progress',
+                    'on_hold',
+                    'completed',
+                    'cancelled',
+                    'blocked',
+                    'archived'
+                  );"
+
         - createTable:
               tableName: customer
               columns:
@@ -91,8 +100,9 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: ${now} ON UPDATE CURRENT_TIMESTAMP
+
         - createTable:
-            tableName: tasks
+            tableName: task
             columns:
               - column:
                   name: id
@@ -137,6 +147,3 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: ${now} ON UPDATE CURRENT_TIMESTAMP
-            
-
-
