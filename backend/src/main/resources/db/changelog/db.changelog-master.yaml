@@ -13,15 +13,20 @@ databaseChangeLog:
       labels: table creation
       changes:
         - sql:
-            sql: "CREATE TYPE status AS ENUM (
-                    'open',
-                    'in_progress',
-                    'on_hold',
-                    'completed',
-                    'cancelled',
-                    'blocked',
-                    'archived'
-                  );"
+            splitStatements: true
+            endDelimiter: ";"
+            sql: >
+              CREATE TYPE status AS ENUM (
+                      'open',
+                      'in_progress',
+                      'on_hold',
+                      'completed',
+                      'cancelled',
+                      'blocked',
+                      'archived'
+                    );
+              
+              CREATE CAST (varchar AS status) WITH INOUT AS IMPLICIT;
 
         - createTable:
               tableName: customer
@@ -114,7 +119,6 @@ databaseChangeLog:
                   name: customer_id
                   type: uuid
                   constraints:
-                    nullable: false
                     foreignKeyName: fk_tasks_customer
                     references: customer(id)
               - column:
