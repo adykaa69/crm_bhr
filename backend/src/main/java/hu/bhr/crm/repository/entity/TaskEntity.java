@@ -1,9 +1,11 @@
 package hu.bhr.crm.repository.entity;
 
-import hu.bhr.crm.domain.TaskStatus;
+import hu.bhr.crm.model.TaskStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.SourceType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -44,7 +46,8 @@ public class TaskEntity {
     private Timestamp dueDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private TaskStatus status;
 
     @CreationTimestamp(source = SourceType.DB)

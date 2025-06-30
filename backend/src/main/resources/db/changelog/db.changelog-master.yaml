@@ -3,30 +3,22 @@ databaseChangeLog:
       dbms: postgresql
       name: now
       value: current_timestamp
-  - property:
-      dbms: h2
-      name: now
-      value: now()
   - changeSet:
       id: 1
       author: tomi
       labels: table creation
       changes:
         - sql:
-            splitStatements: true
-            endDelimiter: ";"
             sql: >
               CREATE TYPE status AS ENUM (
-                      'open',
-                      'in_progress',
-                      'on_hold',
-                      'completed',
-                      'cancelled',
-                      'blocked',
-                      'archived'
+                      'OPEN',
+                      'IN_PROGRESS',
+                      'ON_HOLD',
+                      'BLOCKED',
+                      'COMPLETED',
+                      'CANCELLED',
+                      'ARCHIVED'
                     );
-              
-              CREATE CAST (varchar AS status) WITH INOUT AS IMPLICIT;
 
         - createTable:
               tableName: customer
@@ -138,8 +130,6 @@ databaseChangeLog:
               - column:
                   name: status
                   type: status
-                  constraints:
-                    nullable: false
               - column:
                   name: created_at
                   type: timestamp
@@ -151,3 +141,24 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: ${now} ON UPDATE CURRENT_TIMESTAMP
+
+        - sql:
+            splitStatements: false
+            sql: >
+              CREATE OR REPLACE FUNCTION update_completed_at()
+              RETURNS TRIGGER AS $$
+              BEGIN
+                IF NEW.status = 'COMPLETED' THEN
+                  NEW.completed_at := CURRENT_TIMESTAMP;
+                ELSE
+                  NEW.completed_at := NULL;
+                END IF;
+                RETURN NEW;
+              END;
+              $$ LANGUAGE plpgsql;
+        - sql:
+            sql: >
+              CREATE TRIGGER task_completed_at_trigger
+              BEFORE INSERT OR UPDATE ON task
+              FOR EACH ROW
+              EXECUTE FUNCTION update_completed_at();

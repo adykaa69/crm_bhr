@@ -55,6 +55,19 @@ public class GlobalExceptionHandler {
         return new PlatformResponse<>("error", "Error occurred during customer registration", errorResponse);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidStatusException.class)
+    public PlatformResponse<ErrorResponse> handleInvalidStatusException(InvalidStatusException ex) {
+        log.warn("Invalid status exception", ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.INVALID_STATUS.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during task processing", errorResponse);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public PlatformResponse<ErrorResponse> handleGeneralException(Exception ex) {

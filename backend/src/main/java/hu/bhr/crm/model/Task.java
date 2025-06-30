@@ -1,7 +1,5 @@
 package hu.bhr.crm.model;
 
-import hu.bhr.crm.domain.TaskStatus;
-
 import java.sql.Timestamp;
 import java.util.UUID;
 

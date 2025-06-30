@@ -1,18 +1,15 @@
 package hu.bhr.crm.service;
 
-import hu.bhr.crm.domain.TaskStatus;
 import hu.bhr.crm.exception.CustomerNotFoundException;
 import hu.bhr.crm.mapper.TaskMapper;
 import hu.bhr.crm.model.Task;
+import hu.bhr.crm.model.TaskStatus;
 import hu.bhr.crm.repository.CustomerRepository;
 import hu.bhr.crm.repository.TaskRepository;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import hu.bhr.crm.repository.entity.TaskEntity;
 import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 @Service
 public class TaskService {
@@ -38,18 +35,14 @@ public class TaskService {
      */
     public Task saveTask(Task task) {
         FieldValidation.validateNotEmpty(task.title(), "Title");
-        FieldValidation.validateNotEmpty(task.status(), "Status");
 
         TaskEntity taskEntity = taskMapper.taskToTaskEntity(task);
-
-        // Update completedAt timestamp if the task status is completed
-        if (task.status() == TaskStatus.completed) {
-            taskEntity.setCompletedAt(Timestamp.from(Instant.now()));
+        if (task.status() == null) {
+            taskEntity.setStatus(TaskStatus.OPEN);
         } else {
-            taskEntity.setCompletedAt(null);
+            taskEntity.setStatus(task.status());
         }
 
-        // If the task has a customerId, fetch the customer and set it in the task entity
         if (task.customerId() != null) {
             CustomerEntity customer = customerRepository.findById(task.customerId())
                     .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
@@ -57,6 +50,8 @@ public class TaskService {
         }
 
         TaskEntity savedTaskEntity = taskRepository.save(taskEntity);
+        savedTaskEntity = taskRepository.findById(savedTaskEntity.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve saved task"));
 
         return taskMapper.taskEntityToTask(savedTaskEntity);
     }
