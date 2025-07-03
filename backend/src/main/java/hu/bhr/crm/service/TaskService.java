@@ -11,6 +11,8 @@ import hu.bhr.crm.repository.entity.TaskEntity;
 import hu.bhr.crm.validation.FieldValidation;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class TaskService {
 
@@ -37,23 +39,39 @@ public class TaskService {
         FieldValidation.validateNotEmpty(task.title(), "Title");
 
         TaskEntity taskEntity = taskMapper.taskToTaskEntity(task);
-        if (task.status() == null) {
+        setTaskStatusToOpenIfNull(taskEntity);
+
+        UUID customerId = task.customerId();
+        setCustomerByIdIfExists(taskEntity, customerId);
+
+        TaskEntity savedTaskEntity = taskRepository.save(taskEntity);
+        setCompletedAtIfCompleted(savedTaskEntity);
+
+        savedTaskEntity = taskRepository.findById(savedTaskEntity.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve saved task"));
+        return taskMapper.taskEntityToTask(savedTaskEntity);
+    }
+
+    private void setTaskStatusToOpenIfNull(TaskEntity taskEntity) {
+        if (taskEntity.getStatus() == null) {
             taskEntity.setStatus(TaskStatus.OPEN);
         } else {
-            taskEntity.setStatus(task.status());
+            taskEntity.setStatus(taskEntity.getStatus());
         }
+    }
 
-        if (task.customerId() != null) {
-            CustomerEntity customer = customerRepository.findById(task.customerId())
+    private void setCustomerByIdIfExists(TaskEntity taskEntity, UUID customerId) {
+        if (customerId != null) {
+            CustomerEntity customer = customerRepository.findById(customerId)
                     .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
             taskEntity.setCustomer(customer);
         }
+    }
 
-        TaskEntity savedTaskEntity = taskRepository.save(taskEntity);
-        savedTaskEntity = taskRepository.findById(savedTaskEntity.getId())
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve saved task"));
-
-        return taskMapper.taskEntityToTask(savedTaskEntity);
+    private void setCompletedAtIfCompleted(TaskEntity taskEntity) {
+        if (taskEntity.getStatus() == TaskStatus.COMPLETED) {
+            taskRepository.setCompletedAtIfCompleted(taskEntity.getId(), TaskStatus.COMPLETED);
+        }
     }
 }
 

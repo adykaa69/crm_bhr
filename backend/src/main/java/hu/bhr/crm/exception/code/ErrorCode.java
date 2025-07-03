@@ -1,4 +1,4 @@
-package hu.bhr.crm.exception;
+package hu.bhr.crm.exception.code;
 
 public enum ErrorCode {
     CUSTOMER_NOT_FOUND("CUSTOMER.NOT_FOUND"),

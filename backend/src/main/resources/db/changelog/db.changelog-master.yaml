@@ -141,24 +141,3 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: ${now} ON UPDATE CURRENT_TIMESTAMP
-
-        - sql:
-            splitStatements: false
-            sql: >
-              CREATE OR REPLACE FUNCTION update_completed_at()
-              RETURNS TRIGGER AS $$
-              BEGIN
-                IF NEW.status = 'COMPLETED' THEN
-                  NEW.completed_at := CURRENT_TIMESTAMP;
-                ELSE
-                  NEW.completed_at := NULL;
-                END IF;
-                RETURN NEW;
-              END;
-              $$ LANGUAGE plpgsql;
-        - sql:
-            sql: >
-              CREATE TRIGGER task_completed_at_trigger
-              BEFORE INSERT OR UPDATE ON task
-              FOR EACH ROW
-              EXECUTE FUNCTION update_completed_at();
