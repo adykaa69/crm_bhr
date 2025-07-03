@@ -37,6 +37,19 @@ public class SpecificExceptionHandler {
         return new PlatformResponse<>("error", "Error occurred during requesting customer", errorResponse);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public PlatformResponse<ErrorResponse> handleCustomerDetailsNotFoundException(CustomerNotFoundException ex) {
+        log.warn("Customer details not found", ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.CUSTOMER_DETAILS_NOT_FOUND.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during customer details retrieval", errorResponse);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidEmailException.class)
     public PlatformResponse<ErrorResponse> handleInvalidEmailException(InvalidEmailException ex) {
