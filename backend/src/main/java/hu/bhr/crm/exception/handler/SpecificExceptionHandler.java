@@ -2,10 +2,7 @@ package hu.bhr.crm.exception.handler;
 
 import hu.bhr.crm.controller.dto.ErrorResponse;
 import hu.bhr.crm.controller.dto.PlatformResponse;
-import hu.bhr.crm.exception.CustomerNotFoundException;
-import hu.bhr.crm.exception.InvalidEmailException;
-import hu.bhr.crm.exception.InvalidStatusException;
-import hu.bhr.crm.exception.MissingFieldException;
+import hu.bhr.crm.exception.*;
 import hu.bhr.crm.exception.code.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +32,19 @@ public class SpecificExceptionHandler {
         );
 
         return new PlatformResponse<>("error", "Error occurred during requesting customer", errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(TaskNotFoundException.class)
+    public PlatformResponse<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException ex) {
+        log.warn("Task not found", ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.TASK_NOT_FOUND.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during task retrieval", errorResponse);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

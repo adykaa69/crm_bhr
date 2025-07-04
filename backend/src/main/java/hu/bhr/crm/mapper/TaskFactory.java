@@ -2,6 +2,7 @@ package hu.bhr.crm.mapper;
 
 import hu.bhr.crm.controller.dto.TaskRequest;
 import hu.bhr.crm.model.Task;
+import hu.bhr.crm.model.TaskStatus;
 
 import java.util.UUID;
 
@@ -21,7 +22,9 @@ public class TaskFactory {
                 .description(taskRequest.description())
                 .reminder(taskRequest.reminder())
                 .dueDate(taskRequest.dueDate())
-                .status(taskRequest.status())
+                .status(taskRequest.status() == null
+                        ? TaskStatus.OPEN
+                        : taskRequest.status())
                 .build();
     }
 }

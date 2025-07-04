@@ -2,6 +2,7 @@ package hu.bhr.crm.exception.code;
 
 public enum ErrorCode {
     CUSTOMER_NOT_FOUND("CUSTOMER.NOT_FOUND"),
+    TASK_NOT_FOUND("TASK.NOT_FOUND"),
     EMAIL_INVALID("EMAIL.INVALID"),
     MISSING_FIELD("FIELD.MISSING"),
     INVALID_STATUS("STATUS.INVALID"),

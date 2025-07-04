@@ -1,10 +1,10 @@
 package hu.bhr.crm.service;
 
 import hu.bhr.crm.exception.CustomerNotFoundException;
+import hu.bhr.crm.exception.TaskNotFoundException;
 import hu.bhr.crm.mapper.TaskMapper;
 import hu.bhr.crm.model.Task;
 import hu.bhr.crm.model.TaskStatus;
-import hu.bhr.crm.repository.CustomerRepository;
 import hu.bhr.crm.repository.TaskRepository;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import hu.bhr.crm.repository.entity.TaskEntity;
@@ -18,12 +18,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, CustomerRepository customerRepository) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, CustomerService customerService) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
-        this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
     /**
@@ -39,31 +39,20 @@ public class TaskService {
         FieldValidation.validateNotEmpty(task.title(), "Title");
 
         TaskEntity taskEntity = taskMapper.taskToTaskEntity(task);
-        setTaskStatusToOpenIfNull(taskEntity);
 
-        UUID customerId = task.customerId();
-        setCustomerByIdIfExists(taskEntity, customerId);
+        setCustomerByIdIfExists(taskEntity, task.customerId());
 
         TaskEntity savedTaskEntity = taskRepository.save(taskEntity);
         setCompletedAtIfCompleted(savedTaskEntity);
 
         savedTaskEntity = taskRepository.findById(savedTaskEntity.getId())
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve saved task"));
+                .orElseThrow(() -> new TaskNotFoundException("Failed to retrieve saved task"));
         return taskMapper.taskEntityToTask(savedTaskEntity);
-    }
-
-    private void setTaskStatusToOpenIfNull(TaskEntity taskEntity) {
-        if (taskEntity.getStatus() == null) {
-            taskEntity.setStatus(TaskStatus.OPEN);
-        } else {
-            taskEntity.setStatus(taskEntity.getStatus());
-        }
     }
 
     private void setCustomerByIdIfExists(TaskEntity taskEntity, UUID customerId) {
         if (customerId != null) {
-            CustomerEntity customer = customerRepository.findById(customerId)
-                    .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+            CustomerEntity customer = customerService.getCustomerEntityById(customerId);
             taskEntity.setCustomer(customer);
         }
     }

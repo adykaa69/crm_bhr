@@ -135,4 +135,9 @@ public class CustomerService {
         EmailValidation.validate(customer.email());
     }
 
+    public CustomerEntity getCustomerEntityById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+    }
+
 }
