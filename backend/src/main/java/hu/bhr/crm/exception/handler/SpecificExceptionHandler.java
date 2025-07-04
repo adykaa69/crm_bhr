@@ -2,10 +2,7 @@ package hu.bhr.crm.exception.handler;
 
 import hu.bhr.crm.controller.dto.ErrorResponse;
 import hu.bhr.crm.controller.dto.PlatformResponse;
-import hu.bhr.crm.exception.CustomerNotFoundException;
-import hu.bhr.crm.exception.InvalidEmailException;
-import hu.bhr.crm.exception.InvalidStatusException;
-import hu.bhr.crm.exception.MissingFieldException;
+import hu.bhr.crm.exception.*;
 import hu.bhr.crm.exception.code.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +35,8 @@ public class SpecificExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public PlatformResponse<ErrorResponse> handleCustomerDetailsNotFoundException(CustomerNotFoundException ex) {
+    @ExceptionHandler(CustomerDetailsNotFoundException.class)
+    public PlatformResponse<ErrorResponse> handleCustomerDetailsNotFoundException(CustomerDetailsNotFoundException ex) {
         log.warn("Customer details not found", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.CUSTOMER_DETAILS_NOT_FOUND.getCode(),
