@@ -1,6 +1,7 @@
 package hu.bhr.crm.mapper;
 
 import hu.bhr.crm.controller.dto.TaskRequest;
+import hu.bhr.crm.model.Customer;
 import hu.bhr.crm.model.Task;
 import hu.bhr.crm.model.TaskStatus;
 
@@ -14,10 +15,10 @@ public class TaskFactory {
      * @param taskRequest the data transfer object containing the new task details
      * @return one built task in a {@link Task}
      */
-    public static Task createTask(TaskRequest taskRequest) {
+    public static Task createTask(TaskRequest taskRequest, Customer customer) {
         return Task.builder()
                 .id(UUID.randomUUID())
-                .customerId(taskRequest.customerId())
+                .customer(customer)
                 .title(taskRequest.title())
                 .description(taskRequest.description())
                 .reminder(taskRequest.reminder())
