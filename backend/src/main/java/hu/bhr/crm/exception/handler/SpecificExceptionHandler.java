@@ -47,6 +47,19 @@ public class SpecificExceptionHandler {
         return new PlatformResponse<>("error", "Error occurred during customer details retrieval", errorResponse);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(TaskNotFoundException.class)
+    public PlatformResponse<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException ex) {
+        log.warn("Task not found", ex);
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.TASK_NOT_FOUND.getCode(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new PlatformResponse<>("error", "Error occurred during task retrieval", errorResponse);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidEmailException.class)
     public PlatformResponse<ErrorResponse> handleInvalidEmailException(InvalidEmailException ex) {

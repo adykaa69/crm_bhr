@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record Task(
         UUID id,
-        UUID customerId,
+        Customer customer,
         String title,
         String description,
         Timestamp reminder,
@@ -21,7 +21,7 @@ public record Task(
 
     public static class TaskBuilder {
         private UUID id;
-        private UUID customerId;
+        private Customer customer;
         private String title;
         private String description;
         private Timestamp reminder;
@@ -36,8 +36,8 @@ public record Task(
             return this;
         }
 
-        public TaskBuilder customerId(UUID customerId) {
-            this.customerId = customerId;
+        public TaskBuilder customer(Customer customer) {
+            this.customer = customer;
             return this;
         }
 
@@ -82,7 +82,7 @@ public record Task(
         }
 
         public Task build() {
-            return new Task(id, customerId, title, description, reminder, dueDate, status, createdAt, completedAt, updatedAt);
+            return new Task(id, customer, title, description, reminder, dueDate, status, createdAt, completedAt, updatedAt);
         }
     }
 }

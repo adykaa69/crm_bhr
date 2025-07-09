@@ -9,11 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
 
-    @Mapping(source = "customer.id", target = "customerId")
     Task taskEntityToTask(TaskEntity taskEntity);
 
-    @Mapping(target = "customer", ignore = true)
     TaskEntity taskToTaskEntity(Task task);
 
+    @Mapping(source = "customer.id", target = "customerId")
     TaskResponse taskToTaskResponse(Task task);
 }

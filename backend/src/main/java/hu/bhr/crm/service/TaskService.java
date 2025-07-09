@@ -1,10 +1,13 @@
 package hu.bhr.crm.service;
 
+import hu.bhr.crm.controller.dto.TaskRequest;
 import hu.bhr.crm.exception.CustomerNotFoundException;
+import hu.bhr.crm.exception.TaskNotFoundException;
+import hu.bhr.crm.mapper.TaskFactory;
 import hu.bhr.crm.mapper.TaskMapper;
+import hu.bhr.crm.model.Customer;
 import hu.bhr.crm.model.Task;
 import hu.bhr.crm.model.TaskStatus;
-import hu.bhr.crm.repository.CustomerRepository;
 import hu.bhr.crm.repository.TaskRepository;
 import hu.bhr.crm.repository.entity.CustomerEntity;
 import hu.bhr.crm.repository.entity.TaskEntity;
@@ -18,54 +21,40 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, CustomerRepository customerRepository) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, CustomerService customerService) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
-        this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
     /**
      * Saves a new task for a customer.
      * Validates the task's title and checks if the customer exists.
      *
-     * @param task the built task to be saved
+     * @param taskRequest the built task to be saved
      * @return the saved {@link Task} object
-     * @throws CustomerNotFoundException if the customer with the given ID does not exist (returns HTTP 404 Not Found)
      * @throws hu.bhr.crm.exception.MissingFieldException if title is missing
+     * @throws TaskNotFoundException if the task could not be retrieved
      */
-    public Task saveTask(Task task) {
-        FieldValidation.validateNotEmpty(task.title(), "Title");
+    public Task saveTask(TaskRequest taskRequest) {
+        FieldValidation.validateNotEmpty(taskRequest.title(), "Title");
 
+        Customer customer = null;
+        if (taskRequest.customerId() != null) {
+            customer = customerService.getCustomerById(taskRequest.customerId());
+        }
+
+        Task task = TaskFactory.createTask(taskRequest, customer);
         TaskEntity taskEntity = taskMapper.taskToTaskEntity(task);
-        setTaskStatusToOpenIfNull(taskEntity);
-
-        UUID customerId = task.customerId();
-        setCustomerByIdIfExists(taskEntity, customerId);
-
         TaskEntity savedTaskEntity = taskRepository.save(taskEntity);
+
         setCompletedAtIfCompleted(savedTaskEntity);
 
         savedTaskEntity = taskRepository.findById(savedTaskEntity.getId())
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve saved task"));
+                .orElseThrow(() -> new TaskNotFoundException("Failed to retrieve saved task"));
         return taskMapper.taskEntityToTask(savedTaskEntity);
-    }
-
-    private void setTaskStatusToOpenIfNull(TaskEntity taskEntity) {
-        if (taskEntity.getStatus() == null) {
-            taskEntity.setStatus(TaskStatus.OPEN);
-        } else {
-            taskEntity.setStatus(taskEntity.getStatus());
-        }
-    }
-
-    private void setCustomerByIdIfExists(TaskEntity taskEntity, UUID customerId) {
-        if (customerId != null) {
-            CustomerEntity customer = customerRepository.findById(customerId)
-                    .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
-            taskEntity.setCustomer(customer);
-        }
     }
 
     private void setCompletedAtIfCompleted(TaskEntity taskEntity) {
