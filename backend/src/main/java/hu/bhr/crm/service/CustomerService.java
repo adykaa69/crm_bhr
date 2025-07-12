@@ -19,11 +19,13 @@ public class CustomerService {
 
     private final CustomerRepository repository;
     private final CustomerDetailsService customerDetailsService;
+    private final TaskService taskService;
     private final CustomerMapper customerMapper;
 
-    public CustomerService(CustomerRepository repository, CustomerDetailsService customerDetailsService, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository repository, CustomerDetailsService customerDetailsService, TaskService taskService, CustomerMapper customerMapper) {
         this.repository = repository;
         this.customerDetailsService = customerDetailsService;
+        this.taskService = taskService;
         this.customerMapper = customerMapper;
     }
 
@@ -83,6 +85,8 @@ public class CustomerService {
     public Customer deleteCustomer(UUID id) {
         CustomerEntity customerEntity = repository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+
+        taskService.updateCustomerRelatedTasks(id);
 
         Customer deletedCustomer = customerMapper.customerEntityToCustomer(customerEntity);
         repository.deleteById(id);
